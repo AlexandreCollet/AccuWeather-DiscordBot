@@ -2,6 +2,8 @@
 
 A really simple bot to display current conditions for a specific location.
 
+![accuweather_discordbot](https://user-images.githubusercontent.com/3273308/35831018-8988d4e8-0ac8-11e8-8565-21f9f889ad74.gif)
+
 ## Usage
 
 Commands for this bot follow this structure: `@AccuWeatherBotName command [argument]`.
