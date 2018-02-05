@@ -2,17 +2,12 @@ import os
 import datetime
 import requests
 from discord.ext import commands
-
+from accuweather_api import AccuWeatherAPI
 
 class AccuWeatherCommand:
-    API_ROOT = 'http://dataservice.accuweather.com'
-    API_VERSION = 'v1'
-
     def __init__(self, bot):
         self.bot = bot
-
-        self.language = os.environ.get('ACCUWEATHER_DISCORDBOT_LANGUAGE')
-        self.accuweather_api_key = os.environ.get('ACCUWEATHER_API_KEY')
+        self.accuweather_api = AccuWeatherAPI(os.environ.get('ACCUWEATHER_API_KEY'))
 
     def get_weather_message(self, condition):
         kwargs = {
@@ -39,19 +34,8 @@ class AccuWeatherCommand:
         }
         return '{emoji} {value}{unit} {value_gust}{unit_gust}'.format(**kwargs)
 
-    def get_current_conditions(self, location_key):
-        url = self.API_ROOT + '/currentconditions/v1/' + location_key
-        params = {
-            'apikey': self.accuweather_api_key,
-            'details': True,
-            'language': self.language
-        }
-
-        response = requests.get(url=url, params=params)
-        return response.json()
-
-    def get_current_conditions_message(self, location_key):
-        conditions = self.get_current_conditions(location_key)
+    async def get_current_conditions_message(self, location_key):
+        conditions = await self.accuweather_api.get_current_conditions(location_key)
         condition = conditions[0]
 
         return ' '.join([
@@ -63,7 +47,7 @@ class AccuWeatherCommand:
 
     @commands.command(pass_context=True, no_pm=True)
     async def current_conditions(self, ctx, *, location_key:str):
-        message = self.get_current_conditions_message(location_key)
+        message = await self.get_current_conditions_message(location_key)
         print(datetime.datetime.now(), message)
 
         await self.bot.delete_message(ctx.message)
