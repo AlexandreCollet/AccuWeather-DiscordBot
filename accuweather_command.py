@@ -7,9 +7,9 @@ from utils import display_weather, display_temperature, display_wind
 
 
 class AccuWeatherCommand:
-    def __init__(self, bot, accuweather_api_key):
+    def __init__(self, bot, accuweather_api_key, language=None):
         self.bot = bot
-        self.accuweather_api = AccuWeatherAPI(accuweather_api_key)
+        self.accuweather_api = AccuWeatherAPI(accuweather_api_key, language)
 
     @commands.command(pass_context=True, no_pm=True)
     async def current_conditions(self, ctx, *, location_key:str):
